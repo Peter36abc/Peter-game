@@ -1,0 +1,84 @@
+[gd_scene format=3 uid="uid://2yhrgddgf70d"]
+
+[ext_resource type="Texture2D" uid="uid://c2kuv7t5txf5d" path="res://dff815fc-1d40-4a95-b967-c781991e2e05.png" id="1_k5de2"]
+
+[node name="HUD" type="Control" unique_id=551384518]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=32034476]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 646.0
+
+[node name="Label" type="Label" parent="TextureRect" unique_id=139091942]
+layout_mode = 0
+offset_left = 504.0
+offset_top = 10.0
+offset_right = 695.0
+offset_bottom = 72.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 39
+text = "WAVE 1"
+horizontal_alignment = 1
+max_lines_visible = 508
+
+[node name="Label2" type="Label" parent="TextureRect" unique_id=711109033]
+layout_mode = 0
+offset_left = 503.0
+offset_top = 7.0
+offset_right = 689.0
+offset_bottom = 61.0
+theme_override_font_sizes/font_size = 39
+text = "WAVE 1"
+horizontal_alignment = 1
+max_lines_visible = 508
+
+[node name="Heart1" type="TextureRect" parent="TextureRect" unique_id=881910355]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 579.0
+offset_right = 81.0
+offset_bottom = 637.0
+texture = ExtResource("1_k5de2")
+expand_mode = 2
+
+[node name="Heart2" type="TextureRect" parent="TextureRect" unique_id=1811989528]
+layout_mode = 0
+offset_left = 59.0
+offset_top = 579.0
+offset_right = 137.0
+offset_bottom = 637.0
+texture = ExtResource("1_k5de2")
+expand_mode = 2
+
+[node name="Heart3" type="TextureRect" parent="TextureRect" unique_id=919359961]
+layout_mode = 0
+offset_left = 113.0
+offset_top = 580.0
+offset_right = 191.0
+offset_bottom = 638.0
+texture = ExtResource("1_k5de2")
+expand_mode = 2
+
+[node name="Heart4" type="TextureRect" parent="TextureRect" unique_id=106130781]
+layout_mode = 0
+offset_left = 166.0
+offset_top = 580.0
+offset_right = 244.0
+offset_bottom = 638.0
+texture = ExtResource("1_k5de2")
+expand_mode = 2
+
+[node name="Heart5" type="TextureRect" parent="TextureRect" unique_id=1567006228]
+layout_mode = 0
+offset_left = 218.0
+offset_top = 580.0
+offset_right = 296.0
+offset_bottom = 638.0
+texture = ExtResource("1_k5de2")
+expand_mode = 2
