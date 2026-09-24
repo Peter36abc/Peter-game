@@ -1,6 +1,8 @@
 [gd_scene format=3 uid="uid://2yhrgddgf70d"]
 
+[ext_resource type="Script" uid="uid://ded7jhardrpj5" path="res://hud.gd" id="1_efote"]
 [ext_resource type="Texture2D" uid="uid://c2kuv7t5txf5d" path="res://dff815fc-1d40-4a95-b967-c781991e2e05.png" id="1_k5de2"]
+[ext_resource type="Texture2D" uid="uid://cwc7jex6wjrn7" path="res://d1d6cde4-e405-434f-ac2a-7a04400732c8.png" id="3_vow1y"]
 
 [node name="HUD" type="Control" unique_id=551384518]
 layout_mode = 3
@@ -9,23 +11,12 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_efote")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=32034476]
 layout_mode = 0
 offset_right = 1152.0
 offset_bottom = 646.0
-
-[node name="Label" type="Label" parent="TextureRect" unique_id=139091942]
-layout_mode = 0
-offset_left = 504.0
-offset_top = 10.0
-offset_right = 695.0
-offset_bottom = 72.0
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 39
-text = "WAVE 1"
-horizontal_alignment = 1
-max_lines_visible = 508
 
 [node name="Label2" type="Label" parent="TextureRect" unique_id=711109033]
 layout_mode = 0
@@ -38,47 +29,109 @@ text = "WAVE 1"
 horizontal_alignment = 1
 max_lines_visible = 508
 
+[node name="Label4" type="Label" parent="TextureRect" unique_id=555452102]
+layout_mode = 0
+offset_left = 11.0
+offset_top = 5.0
+offset_right = 237.0
+offset_bottom = 59.0
+theme_override_font_sizes/font_size = 39
+text = "Zombies: 10"
+horizontal_alignment = 1
+max_lines_visible = 508
+
 [node name="Heart1" type="TextureRect" parent="TextureRect" unique_id=881910355]
 layout_mode = 0
-offset_left = 3.0
-offset_top = 579.0
-offset_right = 81.0
-offset_bottom = 637.0
+offset_left = 400.0
+offset_top = 65.0
+offset_right = 456.485
+offset_bottom = 105.09497
 texture = ExtResource("1_k5de2")
 expand_mode = 2
 
 [node name="Heart2" type="TextureRect" parent="TextureRect" unique_id=1811989528]
 layout_mode = 0
-offset_left = 59.0
-offset_top = 579.0
-offset_right = 137.0
-offset_bottom = 637.0
+offset_left = 456.0
+offset_top = 65.0
+offset_right = 512.485
+offset_bottom = 105.09497
 texture = ExtResource("1_k5de2")
 expand_mode = 2
 
 [node name="Heart3" type="TextureRect" parent="TextureRect" unique_id=919359961]
 layout_mode = 0
-offset_left = 113.0
-offset_top = 580.0
-offset_right = 191.0
-offset_bottom = 638.0
+offset_left = 510.0
+offset_top = 66.0
+offset_right = 566.485
+offset_bottom = 106.09497
 texture = ExtResource("1_k5de2")
 expand_mode = 2
 
 [node name="Heart4" type="TextureRect" parent="TextureRect" unique_id=106130781]
 layout_mode = 0
-offset_left = 166.0
-offset_top = 580.0
-offset_right = 244.0
-offset_bottom = 638.0
+offset_left = 563.0
+offset_top = 66.0
+offset_right = 619.485
+offset_bottom = 106.09497
 texture = ExtResource("1_k5de2")
 expand_mode = 2
 
 [node name="Heart5" type="TextureRect" parent="TextureRect" unique_id=1567006228]
 layout_mode = 0
-offset_left = 218.0
-offset_top = 580.0
-offset_right = 296.0
-offset_bottom = 638.0
+offset_left = 615.0
+offset_top = 66.0
+offset_right = 671.485
+offset_bottom = 106.09497
 texture = ExtResource("1_k5de2")
 expand_mode = 2
+
+[node name="Heart6" type="TextureRect" parent="TextureRect" unique_id=278887935]
+layout_mode = 0
+offset_left = 663.0
+offset_top = 66.0
+offset_right = 719.485
+offset_bottom = 106.09497
+texture = ExtResource("1_k5de2")
+expand_mode = 2
+
+[node name="Heart7" type="TextureRect" parent="TextureRect" unique_id=2091408993]
+layout_mode = 0
+offset_left = 708.0
+offset_top = 66.0
+offset_right = 764.485
+offset_bottom = 106.09497
+texture = ExtResource("1_k5de2")
+expand_mode = 2
+
+[node name="Heart8" type="TextureRect" parent="TextureRect" unique_id=1254562500]
+layout_mode = 0
+offset_left = 751.0
+offset_top = 66.0
+offset_right = 807.485
+offset_bottom = 106.09497
+texture = ExtResource("1_k5de2")
+expand_mode = 2
+
+[node name="AmmoIcon" type="TextureRect" parent="TextureRect" unique_id=1038467185]
+layout_mode = 0
+offset_left = 69.50619
+offset_top = 575.48816
+offset_right = 155.5062
+offset_bottom = 649.5831
+rotation = 1.579523
+scale = Vector2(0.755, 0.755)
+texture = ExtResource("3_vow1y")
+expand_mode = 2
+flip_h = true
+
+[node name="Ammo" type="Label" parent="TextureRect" unique_id=1287950678]
+layout_mode = 0
+offset_left = 48.506184
+offset_top = 588.4881
+offset_right = 141.50618
+offset_bottom = 642.4881
+scale = Vector2(0.755, 0.755)
+theme_override_font_sizes/font_size = 39
+text = "1/20"
+horizontal_alignment = 1
+max_lines_visible = 508
