@@ -53,6 +53,14 @@ const DustParticles = preload("res://dust_particles.gd")
 @export var camera_shake_duration: float = 0.18
 
 
+@export_group("Arena Camera")
+
+@export var camera_limit_left: int = -1410
+@export var camera_limit_right: int = 1410
+@export var camera_limit_top: int = -40
+@export var camera_limit_bottom: int = 506
+
+
 # ============================================================
 # ANIMATIONS
 # ============================================================
@@ -85,7 +93,7 @@ const DustParticles = preload("res://dust_particles.gd")
 @export var reload_time: float = 1.5
 @export var fire_rate: float = 0.15
 
-@export var shoot_distance: float = 2000.0
+@export var shoot_distance: float = 850.0
 @export var damage: int = 20
 @export var max_reserve_ammo: int = 300
 
@@ -96,7 +104,6 @@ const DustParticles = preload("res://dust_particles.gd")
 @export var extra_experience_per_level: int = 2
 @export var levels_per_upgrade: int = 2
 @export var multishot_spread_degrees: float = 8.0
-@export var max_multishot_count: int = 10
 
 
 # ============================================================
@@ -121,8 +128,8 @@ const DustParticles = preload("res://dust_particles.gd")
 
 @export_group("Projectile")
 
-@export var projectile_speed: float = 1400.0
-@export var projectile_lifetime: float = 0.12
+@export var projectile_speed: float = 2200.0
+@export var projectile_lifetime: float = 0.5
 
 @export var projectile_length: float = 22.0
 @export var projectile_thickness: float = 1.5
@@ -240,6 +247,10 @@ func _ready() -> void:
 	ammo = mag_size
 	reserve_ammo = starting_reserve_ammo
 	camera_base_offset = camera_2d.offset
+	camera_2d.limit_left = camera_limit_left
+	camera_2d.limit_right = camera_limit_right
+	camera_2d.limit_top = camera_limit_top
+	camera_2d.limit_bottom = camera_limit_bottom
 
 	# HUD may finish entering the tree after the player.
 	call_deferred("update_hud_lives")
@@ -738,27 +749,19 @@ func shoot() -> void:
 
 
 	# --------------------------------------------------------
-	# DIRECTION TO MOUSE
-	# --------------------------------------------------------
-
-	var mouse_position: Vector2 = (
-		get_global_mouse_position()
-	)
-
-
-	var shoot_direction: Vector2 = (
-		mouse_position
-		- global_position
-	).normalized()
-
-
-	# --------------------------------------------------------
 	# CORRECT MUZZLE POSITION
 	# --------------------------------------------------------
 
 	var muzzle_position: Vector2 = (
 		get_muzzle_position()
 	)
+
+
+	var mouse_position: Vector2 = get_global_mouse_position()
+	var shoot_direction: Vector2 = (
+		mouse_position
+		- muzzle_position
+	).normalized()
 
 
 	# --------------------------------------------------------
@@ -776,8 +779,12 @@ func shoot() -> void:
 			(float(shot_index) - center_index) * multishot_spread_degrees
 		)
 		var bullet_direction := shoot_direction.rotated(angle_offset)
-		spawn_temp_projectile(muzzle_position, bullet_direction)
-		fire_hitscan(muzzle_position, bullet_direction)
+		var hit_position := fire_hitscan(muzzle_position, bullet_direction)
+		spawn_temp_projectile(
+			muzzle_position,
+			bullet_direction,
+			hit_position
+		)
 
 
 	print(
@@ -792,7 +799,7 @@ func shoot() -> void:
 	update_hud_ammo()
 
 
-func fire_hitscan(start_position: Vector2, direction: Vector2) -> void:
+func fire_hitscan(start_position: Vector2, direction: Vector2) -> Vector2:
 	var shoot_end := start_position + direction * shoot_distance
 	var query := PhysicsRayQueryParameters2D.create(
 		start_position,
@@ -802,11 +809,14 @@ func fire_hitscan(start_position: Vector2, direction: Vector2) -> void:
 
 	var result := get_world_2d().direct_space_state.intersect_ray(query)
 	if result.is_empty():
-		return
+		return shoot_end
 
 	var collider: Object = result["collider"]
 	if collider.has_method("take_damage"):
 		collider.call("take_damage", damage, direction)
+
+	var impact_position: Vector2 = result["position"]
+	return impact_position
 
 
 # ============================================================
@@ -815,14 +825,16 @@ func fire_hitscan(start_position: Vector2, direction: Vector2) -> void:
 
 func spawn_temp_projectile(
 	start_position: Vector2,
-	direction: Vector2
+	direction: Vector2,
+	end_position: Vector2
 ) -> void:
 
 	var projectile := Polygon2D.new()
 
 
+	var hit_distance := start_position.distance_to(end_position)
 	var half_length: float = (
-		projectile_length
+		minf(projectile_length, hit_distance)
 		* 0.5
 	)
 
@@ -871,8 +883,9 @@ func spawn_temp_projectile(
 	)
 
 
+	var visual_half_length := half_length
 	projectile.global_position = (
-		start_position
+		start_position + direction * visual_half_length
 	)
 
 
@@ -885,12 +898,17 @@ func spawn_temp_projectile(
 	# MOVE TRACER
 	# --------------------------------------------------------
 
-	var end_position: Vector2 = (
-		start_position
-		+ direction
-		* projectile_speed
-		* projectile_lifetime
+	var visual_end_position := (
+		end_position - direction * visual_half_length
 	)
+	var travel_distance := projectile.global_position.distance_to(
+		visual_end_position
+	)
+	var travel_duration := minf(
+		travel_distance / maxf(projectile_speed, 1.0),
+		projectile_lifetime
+	)
+	travel_duration = maxf(travel_duration, 0.03)
 
 
 	var tween: Tween = (
@@ -901,8 +919,8 @@ func spawn_temp_projectile(
 	tween.tween_property(
 		projectile,
 		"global_position",
-		end_position,
-		projectile_lifetime
+		visual_end_position,
+		travel_duration
 	)
 
 
@@ -1172,7 +1190,8 @@ func handle_camera_shake(delta: float) -> void:
 # ============================================================
 
 func take_damage(
-	amount: int
+	amount: int,
+	heart_damage: int = 1
 ) -> void:
 
 	if is_dead:
@@ -1184,9 +1203,9 @@ func take_damage(
 		update_hud_progress()
 		return
 
-	# One zombie hit = one heart lost.
+	var hearts_lost := maxi(heart_damage, 1)
 	current_lives = maxi(
-		current_lives - 1,
+		current_lives - hearts_lost,
 		0
 	)
 
@@ -1337,10 +1356,7 @@ func apply_upgrade(upgrade_id: StringName) -> void:
 	pending_upgrade_choices -= 1
 	match upgrade_id:
 		&"multishot":
-			multishot_count = mini(
-				multishot_count + 1,
-				max_multishot_count
-			)
+			multishot_count += 1
 		&"big_bullets":
 			projectile_length *= 1.2
 			projectile_thickness *= 1.45
@@ -1348,7 +1364,7 @@ func apply_upgrade(upgrade_id: StringName) -> void:
 		&"damage":
 			damage += 10
 		&"rapid_fire":
-			fire_rate = maxf(fire_rate * 0.85, 0.05)
+			fire_rate *= 0.85
 		&"max_ammo":
 			mag_size += 4
 			max_reserve_ammo += 24
@@ -1357,7 +1373,7 @@ func apply_upgrade(upgrade_id: StringName) -> void:
 		&"shield":
 			shield_hits += 2
 		&"health":
-			max_lives = mini(max_lives + 1, 16)
+			max_lives += 1
 			current_lives = mini(current_lives + 2, max_lives)
 
 	update_hud_lives()

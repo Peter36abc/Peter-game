@@ -4,7 +4,7 @@ const UPGRADE_POOL: Array[Dictionary] = [
 	{
 		"id": &"multishot",
 		"title": "MULTI SHOT",
-		"description": "Add one bullet. Stacks up to 10."
+		"description": "Add one bullet to every shot."
 	},
 	{
 		"id": &"big_bullets",

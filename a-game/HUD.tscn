@@ -179,3 +179,15 @@ theme_override_colors/font_color = Color(0.2, 0.9, 0.95, 1)
 theme_override_font_sizes/font_size = 22
 text = "SHIELD 0"
 horizontal_alignment = 2
+
+[node name="HealthCount" type="Label" parent="TextureRect"]
+visible = false
+layout_mode = 0
+offset_left = 472.0
+offset_top = 154.0
+offset_right = 780.0
+offset_bottom = 188.0
+theme_override_colors/font_color = Color(1, 0.35, 0.32, 1)
+theme_override_font_sizes/font_size = 22
+text = "HP 17 / 17"
+horizontal_alignment = 1

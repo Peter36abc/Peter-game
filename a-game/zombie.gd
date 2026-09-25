@@ -20,6 +20,7 @@ signal died(zombie: Node)
 @export var attack_vertical_distance: float = 24.0
 @export var attack_cooldown: float = 1.0
 @export var spawn_y_adjustment: float = 0.0
+@export var hit_stun_enabled: bool = false
 @export var knockback_duration: float = 0.28
 @export var knockback_drag: float = 520.0
 
@@ -471,7 +472,8 @@ func take_damage(
 		return
 
 
-	start_hurt_animation()
+	if hit_stun_enabled:
+		start_hurt_animation()
 
 
 func start_hurt_animation() -> void:

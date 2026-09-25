@@ -11,6 +11,7 @@ extends Node
 @onready var level_label: Label = $TextureRect/Level
 @onready var experience_bar: ProgressBar = $TextureRect/ExperienceBar
 @onready var shield_label: Label = $TextureRect/Shield
+@onready var health_count_label: Label = $TextureRect/HealthCount
 
 @onready var hearts: Array[Control] = [
 	$TextureRect/Heart1,
@@ -42,6 +43,7 @@ func _ready() -> void:
 	register_animated_control(ammo_label)
 	register_animated_control(level_label)
 	register_animated_control(shield_label)
+	register_animated_control(health_count_label)
 	for heart: Control in hearts:
 		register_animated_control(heart)
 
@@ -85,6 +87,8 @@ func set_lives(lives: int) -> void:
 func set_health(lives: int, maximum_lives: int) -> void:
 	ensure_heart_count(maximum_lives)
 	set_lives(lives)
+	health_count_label.text = "HP " + str(lives) + " / " + str(maximum_lives)
+	health_count_label.visible = maximum_lives > 16
 
 
 func ensure_heart_count(maximum_lives: int) -> void:

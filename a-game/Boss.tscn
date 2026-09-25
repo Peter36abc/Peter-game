@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://drb62xxcyfhcp"]
 
 [ext_resource type="Texture2D" uid="uid://d3suwbjfqsku" path="res://70607b1c-3b7f-4672-adc1-02db75ba6007.png" id="1_dtosr"]
+[ext_resource type="Script" path="res://boss_zombie.gd" id="2_boss"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_j13hd"]
 atlas = ExtResource("1_dtosr")
@@ -236,7 +237,29 @@ animations = [{
 radius = 74.0
 height = 174.0
 
-[node name="CharacterBody2D" type="CharacterBody2D" unique_id=1305357785]
+[node name="BossZombie" type="CharacterBody2D" unique_id=1305357785]
+scale = Vector2(0.62, 0.62)
+script = ExtResource("2_boss")
+speed = 55.0
+max_health = 1400
+damage = 30
+attack_distance = 85.0
+attack_vertical_distance = 72.0
+attack_cooldown = 1.1
+spawn_y_adjustment = -55.0
+knockback_duration = 0.18
+knockback_drag = 420.0
+footstep_interval = 0.38
+footstep_particle_amount = 12
+ground_effect_offset = 75.0
+blood_amount = 20
+blood_size_min = 2.5
+blood_size_max = 6.0
+blood_distance_max = 85.0
+blood_y_offset = -35.0
+health_drop_chance = 0.65
+ammo_drop_chance = 0.65
+experience_value = 12
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1154601504]
 sprite_frames = SubResource("SpriteFrames_ay8wc")

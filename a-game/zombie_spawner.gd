@@ -15,7 +15,21 @@ extends Node2D
 # Slow, high-health tank variant.
 @export var fat_zombie_scene: PackedScene = preload("res://fat_zombie_character.tscn")
 
-@export var Boss_scene: PackedScene = preload("res://Boss.tscn")
+@export var boss_scene: PackedScene = preload("res://Boss.tscn")
+
+
+@export_group("Boss Waves")
+
+@export var boss_start_wave: int = 5
+@export var boss_wave_interval: int = 5
+# Adds another boss every ten waves: 1 on wave 5, 2 on 15, 3 on 25...
+@export var waves_per_extra_boss: int = 10
+
+
+@export_group("Enemy Scaling")
+
+# Linear and uncapped: wave 10 has 2.08x health at the default value.
+@export var health_growth_per_wave: float = 0.12
 
 
 @export_group("Leap Zombie Spawning")
@@ -57,12 +71,18 @@ extends Node2D
 # The rest remain queued and spawn when zombies die.
 @export var max_alive_at_once: int = 15
 
-# Zombies appear to the LEFT or RIGHT of the nearest player.
-@export var spawn_distance_min: float = 350.0
-@export var spawn_distance_max: float = 500.0
-
 # Adjust if the zombie feet appear too high/low.
 @export var spawn_y_offset: float = 0.0
+
+
+@export_group("Arena Bounds")
+
+@export var arena_min_x: float = -1320.0
+@export var arena_max_x: float = 1320.0
+@export var arena_spawn_y: float = 395.0
+@export var left_spawn_zone: Vector2 = Vector2(-1280.0, -1120.0)
+@export var right_spawn_zone: Vector2 = Vector2(1120.0, 1280.0)
+@export var spawn_safe_distance_from_player: float = 320.0
 
 
 var current_wave: int = 0
@@ -71,6 +91,8 @@ var zombies_this_wave: int = 0
 var zombies_left_to_spawn: int = 0
 var zombies_left_to_kill: int = 0
 var zombies_alive: int = 0
+var bosses_this_wave: int = 0
+var bosses_left_to_spawn: int = 0
 
 var spawn_timer: float = 0.0
 
@@ -124,10 +146,13 @@ func start_next_wave() -> void:
 
 	current_wave += 1
 
-	zombies_this_wave = (
+	var regular_zombies_this_wave := (
 		starting_zombies
 		+ (current_wave - 1) * zombies_added_per_wave
 	)
+	bosses_this_wave = get_boss_count_for_wave(current_wave)
+	bosses_left_to_spawn = bosses_this_wave
+	zombies_this_wave = regular_zombies_this_wave + bosses_this_wave
 
 	zombies_left_to_spawn = zombies_this_wave
 	zombies_left_to_kill = zombies_this_wave
@@ -142,7 +167,9 @@ func start_next_wave() -> void:
 		current_wave,
 		" STARTED - ",
 		zombies_this_wave,
-		" zombies"
+		" enemies (",
+		bosses_this_wave,
+		" bosses)"
 	)
 
 
@@ -170,20 +197,18 @@ func spawn_one_zombie() -> void:
 		side = -1.0
 
 
-	var distance: float = randf_range(
-		spawn_distance_min,
-		spawn_distance_max
-	)
-
-
 	var spawn_position: Vector2 = Vector2(
-		player.global_position.x + distance * side,
-		player.global_position.y + spawn_y_offset
+		choose_spawn_x(player.global_position.x, side),
+		arena_spawn_y + spawn_y_offset
 	)
 
 
-	var scene_to_spawn: PackedScene = choose_zombie_scene()
+	var spawning_boss := bosses_left_to_spawn > 0 and boss_scene != null
+	var scene_to_spawn: PackedScene = (
+		boss_scene if spawning_boss else choose_zombie_scene()
+	)
 	var zombie: Node = scene_to_spawn.instantiate()
+	apply_wave_health_scaling(zombie)
 
 	get_tree().current_scene.add_child(zombie)
 
@@ -213,8 +238,35 @@ func spawn_one_zombie() -> void:
 
 	zombies_left_to_spawn -= 1
 	zombies_alive += 1
+	if spawning_boss:
+		bosses_left_to_spawn -= 1
 
 	update_hud()
+
+
+func choose_spawn_x(
+	player_x: float,
+	preferred_side: float
+) -> float:
+	var preferred_zone := (
+		right_spawn_zone if preferred_side > 0.0 else left_spawn_zone
+	)
+	var opposite_zone := (
+		left_spawn_zone if preferred_side > 0.0 else right_spawn_zone
+	)
+	var preferred_x := random_x_in_spawn_zone(preferred_zone)
+
+	if absf(preferred_x - player_x) >= spawn_safe_distance_from_player:
+		return preferred_x
+
+	return random_x_in_spawn_zone(opposite_zone)
+
+
+func random_x_in_spawn_zone(zone: Vector2) -> float:
+	var zone_min := clampf(minf(zone.x, zone.y), arena_min_x, arena_max_x)
+	var zone_max := clampf(maxf(zone.x, zone.y), arena_min_x, arena_max_x)
+
+	return randf_range(zone_min, zone_max)
 
 
 func choose_zombie_scene() -> PackedScene:
@@ -241,6 +293,36 @@ func choose_zombie_scene() -> PackedScene:
 		return leap_zombie_scene
 
 	return zombie_scene
+
+
+func get_boss_count_for_wave(wave: int) -> int:
+	if (
+		boss_scene == null
+		or wave < boss_start_wave
+		or boss_wave_interval <= 0
+		or (wave - boss_start_wave) % boss_wave_interval != 0
+	):
+		return 0
+
+	var growth_interval := maxi(waves_per_extra_boss, 1)
+	return 1 + floori(
+		float(wave - boss_start_wave) / float(growth_interval)
+	)
+
+
+func get_health_multiplier_for_wave(wave: int) -> float:
+	return 1.0 + float(maxi(wave - 1, 0)) * health_growth_per_wave
+
+
+func apply_wave_health_scaling(enemy: Node) -> void:
+	if not "max_health" in enemy:
+		return
+
+	var base_health := int(enemy.get("max_health"))
+	var scaled_health := roundi(
+		float(base_health) * get_health_multiplier_for_wave(current_wave)
+	)
+	enemy.set("max_health", maxi(scaled_health, 1))
 
 
 # ============================================================

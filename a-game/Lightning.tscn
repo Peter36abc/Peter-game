@@ -1,0 +1,56 @@
+[gd_scene format=3 uid="uid://cscgy3g4abxcx"]
+
+[ext_resource type="Texture2D" uid="uid://bqwch4ls1dbg1" path="res://Sprite-sheet.png" id="1_cwqlr"]
+[ext_resource type="Script" uid="uid://cbfi51yywry8w" path="res://lightning.gd" id="2_lightning"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_61vde"]
+atlas = ExtResource("1_cwqlr")
+region = Rect2(0, 0, 128, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q36no"]
+atlas = ExtResource("1_cwqlr")
+region = Rect2(128, 0, 128, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nffs5"]
+atlas = ExtResource("1_cwqlr")
+region = Rect2(256, 0, 128, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mmn6g"]
+atlas = ExtResource("1_cwqlr")
+region = Rect2(384, 0, 128, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qke1p"]
+atlas = ExtResource("1_cwqlr")
+region = Rect2(512, 0, 128, 256)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ay8wc"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_61vde")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q36no")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nffs5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mmn6g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qke1p")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 19.29
+}]
+
+[node name="Node2D" type="Node2D" unique_id=1846078419]
+z_index = 140
+script = ExtResource("2_lightning")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2053285857]
+position = Vector2(0, -128)
+sprite_frames = SubResource("SpriteFrames_ay8wc")
+frame_progress = 0.4088076
