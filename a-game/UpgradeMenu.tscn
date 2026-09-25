@@ -1,0 +1,128 @@
+[gd_scene format=3 uid="uid://d4mcc7y2qkayu"]
+
+[ext_resource type="Script" uid="uid://d3xn8rhbyjew7" path="res://upgrade_menu.gd" id="1_upgrade"]
+
+[sub_resource type="StyleBoxFlat" id="CardNormal"]
+content_margin_left = 20.0
+content_margin_top = 20.0
+content_margin_right = 20.0
+content_margin_bottom = 20.0
+bg_color = Color(0.12, 0.12, 0.12, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.35, 0.35, 0.35, 1)
+
+[sub_resource type="StyleBoxFlat" id="CardPressed"]
+content_margin_left = 20.0
+content_margin_top = 20.0
+content_margin_right = 20.0
+content_margin_bottom = 20.0
+bg_color = Color(0.06, 0.2, 0.16, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.2, 0.9, 0.7, 1)
+
+[sub_resource type="StyleBoxFlat" id="CardHover"]
+content_margin_left = 20.0
+content_margin_top = 20.0
+content_margin_right = 20.0
+content_margin_bottom = 20.0
+bg_color = Color(0.18, 0.18, 0.18, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.2, 0.9, 0.7, 1)
+
+[node name="UpgradeMenu" type="Control" unique_id=640812813]
+process_mode = 3
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_upgrade")
+
+[node name="Backdrop" type="ColorRect" parent="." unique_id=1932016399]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.82)
+
+[node name="Content" type="VBoxContainer" parent="." unique_id=8239052]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.06
+anchor_top = 0.12
+anchor_right = 0.94
+anchor_bottom = 0.88
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="Title" type="Label" parent="Content" unique_id=1061974156]
+layout_mode = 2
+theme_override_font_sizes/font_size = 38
+text = "CHOOSE AN UPGRADE"
+horizontal_alignment = 1
+
+[node name="LevelLabel" type="Label" parent="Content" unique_id=1582676606]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.9, 0.7, 1)
+theme_override_font_sizes/font_size = 20
+text = "LEVEL 5"
+horizontal_alignment = 1
+
+[node name="Cards" type="HBoxContainer" parent="Content" unique_id=1932672746]
+custom_minimum_size = Vector2(0, 285)
+layout_mode = 2
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="Card1" type="Button" parent="Content/Cards" unique_id=214304349]
+custom_minimum_size = Vector2(300, 250)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("CardNormal")
+theme_override_styles/pressed = SubResource("CardPressed")
+theme_override_styles/hover = SubResource("CardHover")
+theme_override_styles/focus = SubResource("CardHover")
+text = "UPGRADE"
+autowrap_mode = 2
+
+[node name="Card2" type="Button" parent="Content/Cards" unique_id=1772260278]
+custom_minimum_size = Vector2(300, 250)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("CardNormal")
+theme_override_styles/pressed = SubResource("CardPressed")
+theme_override_styles/hover = SubResource("CardHover")
+theme_override_styles/focus = SubResource("CardHover")
+text = "UPGRADE"
+autowrap_mode = 2
+
+[node name="Card3" type="Button" parent="Content/Cards" unique_id=1041092653]
+custom_minimum_size = Vector2(300, 250)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("CardNormal")
+theme_override_styles/pressed = SubResource("CardPressed")
+theme_override_styles/hover = SubResource("CardHover")
+theme_override_styles/focus = SubResource("CardHover")
+text = "UPGRADE"
+autowrap_mode = 2
+
+[node name="Hint" type="Label" parent="Content" unique_id=335467494]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 16
+text = "Pick one to continue"
+horizontal_alignment = 1

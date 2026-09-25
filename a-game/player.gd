@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+const DustParticles = preload("res://dust_particles.gd")
+
 
 # ============================================================
 # MOVEMENT
@@ -9,6 +11,17 @@ extends CharacterBody2D
 
 @export var speed: float = 300.0
 @export var jump_velocity: float = -400.0
+@export var knockback_duration: float = 0.24
+@export var knockback_drag: float = 650.0
+
+
+@export_group("Movement Particles")
+
+@export var footstep_interval: float = 0.16
+@export var footstep_particle_amount: int = 5
+@export var jump_particle_amount: int = 14
+@export var particle_ground_offset: float = 23.0
+@export var movement_dust_color: Color = Color(0.76, 0.68, 0.53, 0.9)
 
 
 # ============================================================
@@ -57,7 +70,7 @@ extends CharacterBody2D
 @export var anim_reload: StringName = &"Reloading-standing"
 @export var anim_hurt: StringName = &"Hurt"
 
-@export var hurt_animation_time: float = 0.30
+@export var hurt_animation_time: float = 0.45
 
 
 # ============================================================
@@ -67,14 +80,23 @@ extends CharacterBody2D
 @export_group("Gun")
 
 @export var mag_size: int = 12
-@export var starting_reserve_ammo: int = 60
+@export var starting_reserve_ammo: int = 150
 
 @export var reload_time: float = 1.5
 @export var fire_rate: float = 0.15
 
 @export var shoot_distance: float = 2000.0
 @export var damage: int = 20
-@export var max_reserve_ammo: int = 120
+@export var max_reserve_ammo: int = 300
+
+
+@export_group("Upgrades")
+
+@export var starting_experience_to_level: int = 5
+@export var extra_experience_per_level: int = 2
+@export var levels_per_upgrade: int = 2
+@export var multishot_spread_degrees: float = 8.0
+@export var max_multishot_count: int = 10
 
 
 # ============================================================
@@ -162,6 +184,13 @@ extends CharacterBody2D
 var current_lives: int = 0
 var is_dead: bool = false
 
+var level: int = 1
+var experience: int = 0
+var experience_to_next_level: int = 5
+var pending_upgrade_choices: int = 0
+var multishot_count: int = 1
+var shield_hits: int = 0
+
 var ammo: int
 var reserve_ammo: int
 
@@ -177,6 +206,10 @@ var is_hurt: bool = false
 var hurt_timer: float = 0.0
 
 var movement_direction: float = 0.0
+var footstep_particle_timer: float = 0.0
+var was_on_floor_for_particles: bool = false
+var floor_particles_initialized: bool = false
+var knockback_timer: float = 0.0
 
 # Used so W only jumps once per key press
 var was_w_pressed: bool = false
@@ -202,6 +235,7 @@ func _ready() -> void:
 	add_to_group("players")
 
 	current_lives = max_lives
+	experience_to_next_level = starting_experience_to_level
 
 	ammo = mag_size
 	reserve_ammo = starting_reserve_ammo
@@ -210,6 +244,7 @@ func _ready() -> void:
 	# HUD may finish entering the tree after the player.
 	call_deferred("update_hud_lives")
 	call_deferred("update_hud_ammo")
+	call_deferred("update_hud_progress")
 
 
 	# Make shooting animations loop while holding mouse
@@ -241,6 +276,13 @@ func _ready() -> void:
 		)
 
 
+	if animated_sprite.sprite_frames.has_animation(anim_hurt):
+		animated_sprite.sprite_frames.set_animation_loop(
+			anim_hurt,
+			false
+		)
+
+
 # ============================================================
 # PHYSICS
 # ============================================================
@@ -263,6 +305,9 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
+	if process_knockback(delta):
+		return
+
 
 	# --------------------------------------------------------
 	# W = JUMP
@@ -271,6 +316,7 @@ func _physics_process(delta: float) -> void:
 	var w_pressed: bool = Input.is_physical_key_pressed(KEY_W)
 
 	if w_pressed and not was_w_pressed and is_on_floor():
+		spawn_movement_dust(jump_particle_amount, true)
 		velocity.y = jump_velocity
 
 	was_w_pressed = w_pressed
@@ -303,6 +349,7 @@ func _physics_process(delta: float) -> void:
 
 
 	move_and_slide()
+	update_movement_particles(delta)
 
 
 	# --------------------------------------------------------
@@ -318,6 +365,59 @@ func _physics_process(delta: float) -> void:
 
 
 	update_animation()
+
+
+func update_movement_particles(delta: float) -> void:
+	var grounded_now: bool = is_on_floor()
+
+	if (
+		floor_particles_initialized
+		and grounded_now
+		and not was_on_floor_for_particles
+	):
+		spawn_movement_dust(jump_particle_amount + 4, true)
+
+	if grounded_now and absf(velocity.x) > 5.0:
+		footstep_particle_timer -= delta
+		if footstep_particle_timer <= 0.0:
+			footstep_particle_timer = footstep_interval
+			spawn_movement_dust(footstep_particle_amount, false)
+	else:
+		footstep_particle_timer = 0.0
+
+	was_on_floor_for_particles = grounded_now
+	floor_particles_initialized = true
+
+
+func spawn_movement_dust(
+	particle_amount: int,
+	strong_burst: bool
+) -> void:
+	DustParticles.spawn(
+		get_tree(),
+		global_position + Vector2(0.0, particle_ground_offset),
+		particle_amount,
+		strong_burst,
+		movement_dust_color
+	)
+
+
+func apply_knockback(force: Vector2) -> void:
+	if is_dead:
+		return
+	velocity = force
+	knockback_timer = knockback_duration
+
+
+func process_knockback(delta: float) -> bool:
+	if knockback_timer <= 0.0:
+		return false
+
+	knockback_timer = maxf(knockback_timer - delta, 0.0)
+	velocity.x = move_toward(velocity.x, 0.0, knockback_drag * delta)
+	move_and_slide()
+	update_movement_particles(delta)
+	return true
 
 
 # ============================================================
@@ -662,16 +762,6 @@ func shoot() -> void:
 
 
 	# --------------------------------------------------------
-	# YELLOW TRACER
-	# --------------------------------------------------------
-
-	spawn_temp_projectile(
-		muzzle_position,
-		shoot_direction
-	)
-
-
-	# --------------------------------------------------------
 	# MUZZLE FLASH
 	# --------------------------------------------------------
 
@@ -680,63 +770,14 @@ func shoot() -> void:
 		shoot_direction
 	)
 
-
-	# --------------------------------------------------------
-	# HITSCAN
-	# --------------------------------------------------------
-
-	var shoot_start: Vector2 = (
-		muzzle_position
-	)
-
-
-	var shoot_end: Vector2 = (
-		shoot_start
-		+ shoot_direction
-		* shoot_distance
-	)
-
-
-	var space_state: PhysicsDirectSpaceState2D = (
-		get_world_2d().direct_space_state
-	)
-
-
-	var query: PhysicsRayQueryParameters2D = (
-		PhysicsRayQueryParameters2D.create(
-			shoot_start,
-			shoot_end
+	var center_index := float(multishot_count - 1) * 0.5
+	for shot_index: int in range(multishot_count):
+		var angle_offset := deg_to_rad(
+			(float(shot_index) - center_index) * multishot_spread_degrees
 		)
-	)
-
-
-	query.exclude = [self]
-
-
-	var result: Dictionary = (
-		space_state.intersect_ray(query)
-	)
-
-
-	# --------------------------------------------------------
-	# HIT
-	# --------------------------------------------------------
-
-	if not result.is_empty():
-
-		var collider: Object = (
-			result["collider"]
-		)
-
-
-		if collider.has_method(
-			"take_damage"
-		):
-
-			collider.call(
-				"take_damage",
-				damage
-			)
+		var bullet_direction := shoot_direction.rotated(angle_offset)
+		spawn_temp_projectile(muzzle_position, bullet_direction)
+		fire_hitscan(muzzle_position, bullet_direction)
 
 
 	print(
@@ -749,6 +790,23 @@ func shoot() -> void:
 	)
 
 	update_hud_ammo()
+
+
+func fire_hitscan(start_position: Vector2, direction: Vector2) -> void:
+	var shoot_end := start_position + direction * shoot_distance
+	var query := PhysicsRayQueryParameters2D.create(
+		start_position,
+		shoot_end
+	)
+	query.exclude = [self]
+
+	var result := get_world_2d().direct_space_state.intersect_ray(query)
+	if result.is_empty():
+		return
+
+	var collider: Object = result["collider"]
+	if collider.has_method("take_damage"):
+		collider.call("take_damage", damage, direction)
 
 
 # ============================================================
@@ -1120,6 +1178,12 @@ func take_damage(
 	if is_dead:
 		return
 
+	if shield_hits > 0:
+		shield_hits -= 1
+		start_camera_shake()
+		update_hud_progress()
+		return
+
 	# One zombie hit = one heart lost.
 	current_lives = maxi(
 		current_lives - 1,
@@ -1142,21 +1206,60 @@ func take_damage(
 		die()
 		return
 
-	is_hurt = true
-	hurt_timer = hurt_animation_time
+	start_hurt_animation()
 
-	update_animation()
+
+func start_hurt_animation() -> void:
+	is_hurt = true
+	hurt_timer = get_animation_duration(
+		anim_hurt,
+		hurt_animation_time
+	)
+
+	if animated_sprite.sprite_frames.has_animation(anim_hurt):
+		animated_sprite.play(anim_hurt)
+		animated_sprite.frame = 0
+		animated_sprite.frame_progress = 0.0
+	else:
+		update_animation()
+
+
+func get_animation_duration(
+	animation_name: StringName,
+	fallback_duration: float
+) -> float:
+	var frames: SpriteFrames = animated_sprite.sprite_frames
+	if not frames.has_animation(animation_name):
+		return fallback_duration
+
+	var animation_speed: float = absf(
+		frames.get_animation_speed(animation_name)
+		* animated_sprite.speed_scale
+	)
+	if animation_speed <= 0.001:
+		return fallback_duration
+
+	var duration: float = 0.0
+	for frame_index: int in range(frames.get_frame_count(animation_name)):
+		duration += frames.get_frame_duration(
+			animation_name,
+			frame_index
+		)
+
+	return maxf(fallback_duration, duration / animation_speed)
 
 
 func update_hud_lives() -> void:
 
 	var hud: Node = get_tree().get_first_node_in_group("hud")
 
-	if hud != null and hud.has_method("set_lives"):
-		hud.call(
-			"set_lives",
-			current_lives
-		)
+	if hud == null:
+		return
+
+	if hud.has_method("set_health"):
+		hud.call("set_health", current_lives, max_lives)
+	elif hud.has_method("set_lives"):
+		hud.call("set_lives", current_lives)
 
 
 
@@ -1170,6 +1273,96 @@ func update_hud_ammo() -> void:
 			ammo,
 			reserve_ammo
 		)
+
+
+func update_hud_progress() -> void:
+	var hud: Node = get_tree().get_first_node_in_group("hud")
+	if hud == null:
+		return
+
+	if hud.has_method("set_experience"):
+		hud.call(
+			"set_experience",
+			level,
+			experience,
+			experience_to_next_level
+		)
+
+	if hud.has_method("set_shield"):
+		hud.call("set_shield", shield_hits)
+
+
+# ============================================================
+# EXPERIENCE / UPGRADES
+# ============================================================
+
+func add_experience(amount: int) -> void:
+	if is_dead or amount <= 0:
+		return
+
+	experience += amount
+	while experience >= experience_to_next_level:
+		experience -= experience_to_next_level
+		level += 1
+		experience_to_next_level = (
+			starting_experience_to_level
+			+ (level - 1) * extra_experience_per_level
+		)
+
+		if level % levels_per_upgrade == 0:
+			pending_upgrade_choices += 1
+
+	update_hud_progress()
+	if pending_upgrade_choices > 0:
+		call_deferred("show_upgrade_choice")
+
+
+func show_upgrade_choice() -> void:
+	if pending_upgrade_choices <= 0:
+		return
+
+	var menu: Node = get_tree().get_first_node_in_group("upgrade_menu")
+	if menu != null and menu.has_method("show_for_player"):
+		menu.call("show_for_player", self)
+
+
+func has_pending_upgrades() -> bool:
+	return pending_upgrade_choices > 0
+
+
+func apply_upgrade(upgrade_id: StringName) -> void:
+	if pending_upgrade_choices <= 0:
+		return
+
+	pending_upgrade_choices -= 1
+	match upgrade_id:
+		&"multishot":
+			multishot_count = mini(
+				multishot_count + 1,
+				max_multishot_count
+			)
+		&"big_bullets":
+			projectile_length *= 1.2
+			projectile_thickness *= 1.45
+			damage += 5
+		&"damage":
+			damage += 10
+		&"rapid_fire":
+			fire_rate = maxf(fire_rate * 0.85, 0.05)
+		&"max_ammo":
+			mag_size += 4
+			max_reserve_ammo += 24
+			ammo += 4
+			reserve_ammo = mini(reserve_ammo + 24, max_reserve_ammo)
+		&"shield":
+			shield_hits += 2
+		&"health":
+			max_lives = mini(max_lives + 1, 16)
+			current_lives = mini(current_lives + 2, max_lives)
+
+	update_hud_lives()
+	update_hud_ammo()
+	update_hud_progress()
 
 
 # ============================================================
@@ -1283,6 +1476,10 @@ func die() -> void:
 	velocity = Vector2.ZERO
 
 	print("PLAYER DIED")
+
+	var death_menu: Node = get_tree().get_first_node_in_group("death_menu")
+	if death_menu != null and death_menu.has_method("show_death"):
+		death_menu.call_deferred("show_death", self)
 
 
 # ============================================================

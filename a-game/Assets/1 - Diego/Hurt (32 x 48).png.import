@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cpynw0kjv8sux"
-path="res://.godot/imported/Blink (32 x 48).png-f339a62e59abd723d6bdb56a342d738b.ctex"
+uid="uid://b7eq85hpba722"
+path="res://.godot/imported/Hurt (32 x 48).png-adbe4b6a45dc51dc99f5c96ed6f1c8d1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://1 - Diego/Blink (32 x 48).png"
-dest_files=["res://.godot/imported/Blink (32 x 48).png-f339a62e59abd723d6bdb56a342d738b.ctex"]
+source_file="res://Assets/1 - Diego/Hurt (32 x 48).png"
+dest_files=["res://.godot/imported/Hurt (32 x 48).png-adbe4b6a45dc51dc99f5c96ed6f1c8d1.ctex"]
 
 [params]
 

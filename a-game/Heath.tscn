@@ -22,7 +22,7 @@ animations = [{
 radius = 9.0
 height = 24.0
 
-[node name="Area2D" type="Area2D" unique_id=796752602]
+[node name="Health" type="Area2D" unique_id=796752602]
 script = ExtResource("1_4jbv0")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=624718974]

@@ -9,6 +9,27 @@ extends Node2D
 # Change the path if your Zombie.tscn is somewhere else.
 @export var zombie_scene: PackedScene = preload("res://Zombie.tscn")
 
+# A rarer leaping variant. Its chance increases as waves progress.
+@export var leap_zombie_scene: PackedScene = preload("res://LeapZomboe.tscn")
+
+# Slow, high-health tank variant.
+@export var fat_zombie_scene: PackedScene = preload("res://fat_zombie_character.tscn")
+
+
+@export_group("Leap Zombie Spawning")
+
+@export_range(0.0, 1.0, 0.01) var leap_spawn_chance: float = 0.08
+@export_range(0.0, 1.0, 0.01) var leap_chance_added_per_wave: float = 0.03
+@export_range(0.0, 1.0, 0.01) var max_leap_spawn_chance: float = 0.45
+
+
+@export_group("Fat Zombie Spawning")
+
+@export var fat_zombie_start_wave: int = 2
+@export_range(0.0, 1.0, 0.01) var fat_spawn_chance: float = 0.05
+@export_range(0.0, 1.0, 0.01) var fat_chance_added_per_wave: float = 0.015
+@export_range(0.0, 1.0, 0.01) var max_fat_spawn_chance: float = 0.22
+
 
 @export_group("Wave")
 
@@ -159,14 +180,20 @@ func spawn_one_zombie() -> void:
 	)
 
 
-	var zombie: Node = zombie_scene.instantiate()
+	var scene_to_spawn: PackedScene = choose_zombie_scene()
+	var zombie: Node = scene_to_spawn.instantiate()
 
 	get_tree().current_scene.add_child(zombie)
 
 
 	if zombie is Node2D:
 		var zombie_2d: Node2D = zombie as Node2D
-		zombie_2d.global_position = spawn_position
+		var vertical_adjustment := 0.0
+		if "spawn_y_adjustment" in zombie:
+			vertical_adjustment = float(zombie.get("spawn_y_adjustment"))
+		zombie_2d.global_position = (
+			spawn_position + Vector2(0.0, vertical_adjustment)
+		)
 
 
 	# zombie.gd below has:
@@ -186,6 +213,32 @@ func spawn_one_zombie() -> void:
 	zombies_alive += 1
 
 	update_hud()
+
+
+func choose_zombie_scene() -> PackedScene:
+	var current_leap_chance: float = minf(
+		leap_spawn_chance
+		+ float(maxi(current_wave - 1, 0)) * leap_chance_added_per_wave,
+		max_leap_spawn_chance
+	)
+
+	var current_fat_chance := 0.0
+	if fat_zombie_scene != null and current_wave >= fat_zombie_start_wave:
+		current_fat_chance = minf(
+			fat_spawn_chance
+			+ float(current_wave - fat_zombie_start_wave)
+			* fat_chance_added_per_wave,
+			max_fat_spawn_chance
+		)
+
+	var roll := randf()
+	if fat_zombie_scene != null and roll < current_fat_chance:
+		return fat_zombie_scene
+
+	if leap_zombie_scene != null and roll < current_fat_chance + current_leap_chance:
+		return leap_zombie_scene
+
+	return zombie_scene
 
 
 # ============================================================

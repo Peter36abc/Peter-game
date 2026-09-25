@@ -4,6 +4,17 @@
 [ext_resource type="Texture2D" uid="uid://c2kuv7t5txf5d" path="res://dff815fc-1d40-4a95-b967-c781991e2e05.png" id="1_k5de2"]
 [ext_resource type="Texture2D" uid="uid://cwc7jex6wjrn7" path="res://d1d6cde4-e405-434f-ac2a-7a04400732c8.png" id="3_vow1y"]
 
+[sub_resource type="StyleBoxFlat" id="ExpBackground"]
+bg_color = Color(0.08, 0.08, 0.08, 0.9)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.7, 0.7, 0.7, 1)
+
+[sub_resource type="StyleBoxFlat" id="ExpFill"]
+bg_color = Color(0.15, 0.85, 0.65, 1)
+
 [node name="HUD" type="Control" unique_id=551384518]
 layout_mode = 3
 anchors_preset = 15
@@ -135,3 +146,36 @@ theme_override_font_sizes/font_size = 39
 text = "1/20"
 horizontal_alignment = 1
 max_lines_visible = 508
+
+[node name="Level" type="Label" parent="TextureRect"]
+layout_mode = 0
+offset_left = 390.0
+offset_top = 598.0
+offset_right = 462.0
+offset_bottom = 632.0
+theme_override_font_sizes/font_size = 22
+text = "LV 1"
+horizontal_alignment = 1
+
+[node name="ExperienceBar" type="ProgressBar" parent="TextureRect"]
+layout_mode = 0
+offset_left = 470.0
+offset_top = 603.0
+offset_right = 780.0
+offset_bottom = 628.0
+theme_override_styles/background = SubResource("ExpBackground")
+theme_override_styles/fill = SubResource("ExpFill")
+value = 0.0
+show_percentage = false
+
+[node name="Shield" type="Label" parent="TextureRect"]
+visible = false
+layout_mode = 0
+offset_left = 916.0
+offset_top = 14.0
+offset_right = 1134.0
+offset_bottom = 50.0
+theme_override_colors/font_color = Color(0.2, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 22
+text = "SHIELD 0"
+horizontal_alignment = 2

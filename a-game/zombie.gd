@@ -1,5 +1,8 @@
 extends CharacterBody2D
 
+const DustParticles = preload("res://dust_particles.gd")
+const ExpOrbScene = preload("res://ExpOrb.tscn")
+
 signal died(zombie: Node)
 
 
@@ -14,7 +17,19 @@ signal died(zombie: Node)
 @export var damage: int = 10
 
 @export var attack_distance: float = 45.0
+@export var attack_vertical_distance: float = 24.0
 @export var attack_cooldown: float = 1.0
+@export var spawn_y_adjustment: float = 0.0
+@export var knockback_duration: float = 0.28
+@export var knockback_drag: float = 520.0
+
+
+@export_group("Movement Particles")
+
+@export var footstep_interval: float = 0.25
+@export var footstep_particle_amount: int = 4
+@export var ground_effect_offset: float = 24.0
+@export var dust_color: Color = Color(0.68, 0.61, 0.48, 0.82)
 
 
 # ============================================================
@@ -77,6 +92,9 @@ signal died(zombie: Node)
 # Small random horizontal separation if both drop.
 @export var pickup_drop_spread: float = 12.0
 
+@export_group("Experience")
+@export var experience_value: int = 1
+
 
 # ============================================================
 # VARIABLES
@@ -95,6 +113,8 @@ var is_hurt: bool = false
 var hurt_timer: float = 0.0
 
 var is_dead: bool = false
+var footstep_particle_timer: float = 0.0
+var knockback_timer: float = 0.0
 
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
@@ -171,6 +191,9 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
+	if process_knockback(delta):
+		return
+
 
 	handle_attack_timer(delta)
 	handle_hurt_timer(delta)
@@ -198,12 +221,6 @@ func _physics_process(delta: float) -> void:
 		return
 
 
-	var horizontal_distance: float = absf(
-		target.global_position.x
-		- global_position.x
-	)
-
-
 	var direction: float = sign(
 		target.global_position.x
 		- global_position.x
@@ -217,7 +234,7 @@ func _physics_process(delta: float) -> void:
 		animated_sprite.flip_h = false
 
 
-	if horizontal_distance > attack_distance:
+	if not is_target_in_attack_range():
 
 		is_attacking = false
 		velocity.x = direction * speed
@@ -233,6 +250,60 @@ func _physics_process(delta: float) -> void:
 	update_animation()
 
 	move_and_slide()
+	process_footstep_particles(delta)
+
+
+func process_footstep_particles(delta: float) -> void:
+	if not is_on_floor() or absf(velocity.x) <= 1.0:
+		footstep_particle_timer = 0.0
+		return
+
+	footstep_particle_timer -= delta
+	if footstep_particle_timer > 0.0:
+		return
+
+	footstep_particle_timer = footstep_interval
+	spawn_dust_burst(
+		global_position + Vector2(0.0, ground_effect_offset),
+		footstep_particle_amount,
+		false
+	)
+
+
+func spawn_dust_burst(
+	world_position: Vector2,
+	particle_amount: int,
+	strong_burst: bool
+) -> void:
+	DustParticles.spawn(
+		get_tree(),
+		world_position,
+		particle_amount,
+		strong_burst,
+		dust_color
+	)
+
+
+func apply_knockback(force: Vector2) -> void:
+	if is_dead:
+		return
+	velocity = force
+	knockback_timer = knockback_duration
+	is_attacking = false
+
+
+func process_knockback(delta: float) -> bool:
+	if knockback_timer <= 0.0:
+		return false
+
+	knockback_timer = maxf(knockback_timer - delta, 0.0)
+	velocity.x = move_toward(velocity.x, 0.0, knockback_drag * delta)
+	is_attacking = false
+	handle_hurt_timer(delta)
+	update_animation()
+	move_and_slide()
+	process_footstep_particles(delta)
+	return true
 
 
 # ============================================================
@@ -337,6 +408,10 @@ func attack_player() -> void:
 	if is_dead or is_hurt:
 		return
 
+	# Do not hit a player who is jumping over or standing on the zombie.
+	if not is_target_in_attack_range():
+		return
+
 
 	can_attack = false
 	attack_timer = attack_cooldown
@@ -347,6 +422,17 @@ func attack_player() -> void:
 			"take_damage",
 			damage
 		)
+
+
+func is_target_in_attack_range() -> bool:
+	if target == null:
+		return false
+
+	var offset: Vector2 = target.global_position - global_position
+	return (
+		absf(offset.x) <= attack_distance
+		and absf(offset.y) <= attack_vertical_distance
+	)
 
 
 func handle_attack_timer(delta: float) -> void:
@@ -385,14 +471,44 @@ func take_damage(
 		return
 
 
+	start_hurt_animation()
+
+
+func start_hurt_animation() -> void:
 	is_hurt = true
 	is_attacking = false
-	hurt_timer = hurt_time
+	hurt_timer = get_animation_duration(anim_hurt, hurt_time) + 0.05
 
-	# Restart the hurt animation from frame 0 each hit.
+	# Restart the complete hurt animation from frame 0 on every hit.
 	if animated_sprite.sprite_frames.has_animation(anim_hurt):
 		animated_sprite.play(anim_hurt)
 		animated_sprite.frame = 0
+		animated_sprite.frame_progress = 0.0
+
+
+func get_animation_duration(
+	animation_name: StringName,
+	fallback_duration: float
+) -> float:
+	var frames: SpriteFrames = animated_sprite.sprite_frames
+	if not frames.has_animation(animation_name):
+		return fallback_duration
+
+	var animation_speed: float = absf(
+		frames.get_animation_speed(animation_name)
+		* animated_sprite.speed_scale
+	)
+	if animation_speed <= 0.001:
+		return fallback_duration
+
+	var duration: float = 0.0
+	for frame_index: int in range(frames.get_frame_count(animation_name)):
+		duration += frames.get_frame_duration(
+			animation_name,
+			frame_index
+		)
+
+	return maxf(fallback_duration, duration / animation_speed)
 
 
 func handle_hurt_timer(delta: float) -> void:
@@ -427,6 +543,7 @@ func die() -> void:
 	velocity.x = 0.0
 
 	spawn_pickup_drops()
+	spawn_experience_drop()
 
 
 	# Tell the wave spawner immediately that this zombie is dead.
@@ -461,6 +578,10 @@ func _on_animation_finished() -> void:
 
 	if is_dead and animated_sprite.animation == anim_die:
 		queue_free()
+	elif is_hurt and animated_sprite.animation == anim_hurt:
+		is_hurt = false
+		hurt_timer = 0.0
+		update_animation()
 
 
 
@@ -519,6 +640,22 @@ func spawn_pickup_drops() -> void:
 					0.0
 				)
 			)
+
+
+func spawn_experience_drop() -> void:
+	if experience_value <= 0:
+		return
+
+	var orb: Node = ExpOrbScene.instantiate()
+	orb.set("experience_amount", experience_value)
+	get_tree().current_scene.add_child(orb)
+
+	if orb is Node2D:
+		var orb_2d := orb as Node2D
+		orb_2d.global_position = (
+			global_position
+			+ Vector2(randf_range(-8.0, 8.0), ground_effect_offset)
+		)
 
 
 # ============================================================

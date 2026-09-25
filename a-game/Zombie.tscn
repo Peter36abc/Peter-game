@@ -255,17 +255,16 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_xh7jx"]
-radius = 4.0
-height = 14.0
+radius = 7.0
+height = 17.116837
 
 [node name="CharacterBody2D" type="CharacterBody2D" unique_id=1119838555]
 scale = Vector2(1.455, 1.455)
 script = ExtResource("1_mng7s")
-attack_distance = 30.5
+attack_distance = 30.0
 health_pickup_scene = ExtResource("2_dtdss")
 ammo_pickup_scene = ExtResource("3_qybkj")
-health_drop_chance = 1.0
-ammo_drop_chance = 1.0
+ammo_drop_chance = 0.48
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2054654633]
 scale = Vector2(0.125, 0.125)
@@ -275,6 +274,5 @@ autoplay = "Idle"
 frame_progress = 0.80882317
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=151850181]
-position = Vector2(-1, 1)
-scale = Vector2(1.99, 1.99)
+position = Vector2(-1, 4.5)
 shape = SubResource("CapsuleShape2D_xh7jx")

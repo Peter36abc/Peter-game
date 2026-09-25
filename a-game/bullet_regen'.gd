@@ -23,6 +23,7 @@ extends Area2D
 
 var start_y: float = 0.0
 var age: float = 0.0
+var float_origin_ready: bool = false
 
 
 # ============================================================
@@ -35,14 +36,16 @@ func _ready() -> void:
 		_on_body_entered
 	)
 
-	start_y = position.y
-
-
 # ============================================================
 # PROCESS
 # ============================================================
 
 func _process(delta: float) -> void:
+	# Spawned pickups are positioned after _ready(), so capture the
+	# bobbing origin here on their first frame.
+	if not float_origin_ready:
+		start_y = position.y
+		float_origin_ready = true
 
 	age += delta
 

@@ -22,7 +22,7 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Area2D" type="Area2D" unique_id=796752602]
+[node name="Bullet" type="Area2D" unique_id=796752602]
 script = ExtResource("1_rqeqi")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=146683351]

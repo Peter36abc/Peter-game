@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://d3f5pw8rvw5cv"]
+
+[ext_resource type="Script" uid="uid://c0lts64kaqqf3" path="res://exp_orb.gd" id="1_exp"]
+
+[sub_resource type="CircleShape2D" id="CircleShape_exp"]
+radius = 9.0
+
+[node name="ExpOrb" type="Area2D" unique_id=1431442517]
+z_index = 80
+collision_layer = 0
+script = ExtResource("1_exp")
+
+[node name="Outer" type="Polygon2D" parent="." unique_id=1401770284]
+scale = Vector2(0.55, 0.55)
+color = Color(0.1, 0.75, 0.85, 0.32)
+polygon = PackedVector2Array(-9, 0, 0, -12, 9, 0, 0, 12)
+
+[node name="Gem" type="Polygon2D" parent="." unique_id=703492362]
+scale = Vector2(0.55, 0.55)
+color = Color(0.2, 0.95, 0.75, 1)
+polygon = PackedVector2Array(-5, 0, 0, -8, 5, 0, 0, 8)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=447919592]
+shape = SubResource("CircleShape_exp")
