@@ -15,6 +15,8 @@ extends Node2D
 # Slow, high-health tank variant.
 @export var fat_zombie_scene: PackedScene = preload("res://fat_zombie_character.tscn")
 
+@export var Boss_scene: PackedScene = preload("res://Boss.tscn")
+
 
 @export_group("Leap Zombie Spawning")
 
