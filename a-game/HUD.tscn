@@ -147,7 +147,7 @@ text = "1/20"
 horizontal_alignment = 1
 max_lines_visible = 508
 
-[node name="Level" type="Label" parent="TextureRect"]
+[node name="Level" type="Label" parent="TextureRect" unique_id=179933921]
 layout_mode = 0
 offset_left = 390.0
 offset_top = 598.0
@@ -157,7 +157,7 @@ theme_override_font_sizes/font_size = 22
 text = "LV 1"
 horizontal_alignment = 1
 
-[node name="ExperienceBar" type="ProgressBar" parent="TextureRect"]
+[node name="ExperienceBar" type="ProgressBar" parent="TextureRect" unique_id=1597441632]
 layout_mode = 0
 offset_left = 470.0
 offset_top = 603.0
@@ -165,10 +165,9 @@ offset_right = 780.0
 offset_bottom = 628.0
 theme_override_styles/background = SubResource("ExpBackground")
 theme_override_styles/fill = SubResource("ExpFill")
-value = 0.0
 show_percentage = false
 
-[node name="Shield" type="Label" parent="TextureRect"]
+[node name="Shield" type="Label" parent="TextureRect" unique_id=464312854]
 visible = false
 layout_mode = 0
 offset_left = 916.0
@@ -180,7 +179,7 @@ theme_override_font_sizes/font_size = 22
 text = "SHIELD 0"
 horizontal_alignment = 2
 
-[node name="HealthCount" type="Label" parent="TextureRect"]
+[node name="HealthCount" type="Label" parent="TextureRect" unique_id=1640335031]
 visible = false
 layout_mode = 0
 offset_left = 472.0
