@@ -1,243 +1,308 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene format=3 uid="uid://cwn3g6kww6igh"]
 
 [ext_resource type="Texture2D" uid="uid://db2fn1oxln26p" path="res://ecc9553b-9a94-49af-a251-1cee3043ecd2.png" id="1_city"]
+[ext_resource type="Texture2D" uid="uid://dee6u0u2lq153" path="res://images.jpg" id="2_rtlo6"]
 
 [sub_resource type="AtlasTexture" id="Atlas_ground"]
 atlas = ExtResource("1_city")
 region = Rect2(24, 484, 190, 76)
 
-[sub_resource type="AtlasTexture" id="Atlas_lamp"]
-atlas = ExtResource("1_city")
-region = Rect2(1436, 472, 92, 330)
-
-[sub_resource type="AtlasTexture" id="Atlas_stop"]
-atlas = ExtResource("1_city")
-region = Rect2(1046, 660, 78, 104)
-
-[sub_resource type="AtlasTexture" id="Atlas_traffic"]
-atlas = ExtResource("1_city")
-region = Rect2(1314, 476, 62, 178)
-
-[sub_resource type="AtlasTexture" id="Atlas_tree"]
-atlas = ExtResource("1_city")
-region = Rect2(1344, 642, 101, 160)
-
 [sub_resource type="RectangleShape2D" id="Shape_ground"]
-size = Vector2(2860, 60)
+size = Vector2(3507, 60)
 
 [sub_resource type="RectangleShape2D" id="Shape_wall"]
-size = Vector2(36, 520)
+size = Vector2(32.120117, 1078)
 
 [sub_resource type="RectangleShape2D" id="Shape_platform_300"]
 size = Vector2(300, 14)
 
 [sub_resource type="RectangleShape2D" id="Shape_platform_260"]
-size = Vector2(260, 14)
+size = Vector2(157, 16)
 
 [sub_resource type="RectangleShape2D" id="Shape_platform_320"]
 size = Vector2(320, 14)
 
-[node name="ArenaMap" type="Node2D"]
+[sub_resource type="ImageTexture" id="ImageTexture_xh7jx"]
 
-[node name="CityLeft" type="Sprite2D" parent="."]
-z_index = -100
-position = Vector2(-768, 195)
-texture = ExtResource("1_city")
-region_enabled = true
-region_rect = Rect2(0, 0, 1536, 470)
+[node name="ArenaMap" type="Node2D" unique_id=2066235580]
 
-[node name="CityRight" type="Sprite2D" parent="."]
-z_index = -100
-position = Vector2(768, 195)
-texture = ExtResource("1_city")
-flip_h = true
-region_enabled = true
-region_rect = Rect2(0, 0, 1536, 470)
+[node name="GroundVisuals" type="Node2D" parent="." unique_id=14699819]
+light_mask = 30
+visibility_layer = 30
+z_index = 1
 
-[node name="GroundVisuals" type="Node2D" parent="."]
-z_index = -2
-
-[node name="Ground01" type="Sprite2D" parent="GroundVisuals"]
+[node name="Ground01" type="Sprite2D" parent="GroundVisuals" unique_id=479219474]
 position = Vector2(-1330, 468)
 texture = SubResource("Atlas_ground")
 
-[node name="Ground02" type="Sprite2D" parent="GroundVisuals"]
+[node name="Ground02" type="Sprite2D" parent="GroundVisuals" unique_id=1909668353]
 position = Vector2(-1140, 468)
 texture = SubResource("Atlas_ground")
 
-[node name="Ground03" type="Sprite2D" parent="GroundVisuals"]
+[node name="Ground03" type="Sprite2D" parent="GroundVisuals" unique_id=1663988052]
 position = Vector2(-950, 468)
 texture = SubResource("Atlas_ground")
 
-[node name="Ground04" type="Sprite2D" parent="GroundVisuals"]
+[node name="Ground04" type="Sprite2D" parent="GroundVisuals" unique_id=496021858]
 position = Vector2(-760, 468)
 texture = SubResource("Atlas_ground")
 
-[node name="Ground05" type="Sprite2D" parent="GroundVisuals"]
+[node name="Ground05" type="Sprite2D" parent="GroundVisuals" unique_id=806407116]
 position = Vector2(-570, 468)
 texture = SubResource("Atlas_ground")
 
-[node name="Ground06" type="Sprite2D" parent="GroundVisuals"]
+[node name="Ground06" type="Sprite2D" parent="GroundVisuals" unique_id=2044918489]
 position = Vector2(-380, 468)
 texture = SubResource("Atlas_ground")
 
-[node name="Ground07" type="Sprite2D" parent="GroundVisuals"]
+[node name="Ground07" type="Sprite2D" parent="GroundVisuals" unique_id=1570734504]
 position = Vector2(-190, 468)
 texture = SubResource("Atlas_ground")
 
-[node name="Ground08" type="Sprite2D" parent="GroundVisuals"]
+[node name="Ground08" type="Sprite2D" parent="GroundVisuals" unique_id=1012605389]
 position = Vector2(0, 468)
 texture = SubResource("Atlas_ground")
 
-[node name="Ground09" type="Sprite2D" parent="GroundVisuals"]
+[node name="Ground09" type="Sprite2D" parent="GroundVisuals" unique_id=1497924194]
 position = Vector2(190, 468)
 texture = SubResource("Atlas_ground")
 
-[node name="Ground10" type="Sprite2D" parent="GroundVisuals"]
+[node name="Ground10" type="Sprite2D" parent="GroundVisuals" unique_id=1381470834]
 position = Vector2(380, 468)
 texture = SubResource("Atlas_ground")
 
-[node name="Ground11" type="Sprite2D" parent="GroundVisuals"]
+[node name="Ground11" type="Sprite2D" parent="GroundVisuals" unique_id=234508085]
 position = Vector2(570, 468)
 texture = SubResource("Atlas_ground")
 
-[node name="Ground12" type="Sprite2D" parent="GroundVisuals"]
+[node name="Ground12" type="Sprite2D" parent="GroundVisuals" unique_id=1158505933]
 position = Vector2(760, 468)
 texture = SubResource("Atlas_ground")
 
-[node name="Ground13" type="Sprite2D" parent="GroundVisuals"]
+[node name="Ground13" type="Sprite2D" parent="GroundVisuals" unique_id=1635481664]
 position = Vector2(950, 468)
 texture = SubResource("Atlas_ground")
 
-[node name="Ground14" type="Sprite2D" parent="GroundVisuals"]
+[node name="Ground14" type="Sprite2D" parent="GroundVisuals" unique_id=1322235463]
 position = Vector2(1140, 468)
 texture = SubResource("Atlas_ground")
 
-[node name="Ground15" type="Sprite2D" parent="GroundVisuals"]
+[node name="Ground15" type="Sprite2D" parent="GroundVisuals" unique_id=1143089259]
 position = Vector2(1330, 468)
 texture = SubResource("Atlas_ground")
 
-[node name="Platforms" type="Node2D" parent="."]
-z_index = -1
+[node name="Ground16" type="Sprite2D" parent="GroundVisuals" unique_id=106018298]
+position = Vector2(-1520, 468)
+texture = SubResource("Atlas_ground")
 
-[node name="OuterLeftVisual" type="Sprite2D" parent="Platforms"]
+[node name="Ground17" type="Sprite2D" parent="GroundVisuals" unique_id=1196565399]
+position = Vector2(-1709, 466)
+texture = SubResource("Atlas_ground")
+
+[node name="Ground18" type="Sprite2D" parent="GroundVisuals" unique_id=897254490]
+position = Vector2(-1894, 466)
+texture = SubResource("Atlas_ground")
+
+[node name="Ground19" type="Sprite2D" parent="GroundVisuals" unique_id=1307276851]
+position = Vector2(-2080, 468)
+texture = SubResource("Atlas_ground")
+
+[node name="Ground20" type="Sprite2D" parent="GroundVisuals" unique_id=1259601110]
+position = Vector2(-1244, 364.5)
+scale = Vector2(1, 0.5394737)
+texture = SubResource("Atlas_ground")
+
+[node name="Ground21" type="Sprite2D" parent="GroundVisuals" unique_id=950001595]
+position = Vector2(-1528, 374.0296)
+scale = Vector2(1, 0.4218315)
+texture = SubResource("Atlas_ground")
+
+[node name="Ground22" type="Sprite2D" parent="GroundVisuals" unique_id=356837480]
+position = Vector2(-1842, 357)
+scale = Vector2(1, 0.552036)
+texture = SubResource("Atlas_ground")
+
+[node name="Platforms" type="Node2D" parent="." unique_id=1585138187]
+light_mask = 30
+visibility_layer = 30
+z_index = 1
+
+[node name="OuterLeftVisual" type="Sprite2D" parent="Platforms" unique_id=809596843]
+light_mask = 30
+visibility_layer = 30
+z_index = 1
 position = Vector2(-850, 380.9)
 scale = Vector2(1.57895, 0.55)
 texture = SubResource("Atlas_ground")
 
-[node name="InnerLeftVisual" type="Sprite2D" parent="Platforms"]
-position = Vector2(-450, 355.9)
-scale = Vector2(1.36842, 0.55)
+[node name="InnerLeftVisual" type="Sprite2D" parent="Platforms" unique_id=441363206]
+light_mask = 30
+visibility_layer = 30
+z_index = 1
+position = Vector2(-499.49997, 355.9)
+scale = Vector2(0.84736776, 0.55)
 texture = SubResource("Atlas_ground")
 
-[node name="CenterVisual" type="Sprite2D" parent="Platforms"]
+[node name="CenterVisual" type="Sprite2D" parent="Platforms" unique_id=161862856]
+light_mask = 30
+visibility_layer = 30
+z_index = 1
 position = Vector2(0, 380.9)
 scale = Vector2(1.68421, 0.55)
 texture = SubResource("Atlas_ground")
 
-[node name="InnerRightVisual" type="Sprite2D" parent="Platforms"]
+[node name="InnerRightVisual" type="Sprite2D" parent="Platforms" unique_id=1075867559]
+light_mask = 30
+visibility_layer = 30
+z_index = 1
 position = Vector2(450, 355.9)
 scale = Vector2(1.36842, 0.55)
 texture = SubResource("Atlas_ground")
 
-[node name="OuterRightVisual" type="Sprite2D" parent="Platforms"]
+[node name="OuterRightVisual" type="Sprite2D" parent="Platforms" unique_id=1355621410]
+light_mask = 30
+visibility_layer = 30
+z_index = 1
 position = Vector2(850, 380.9)
 scale = Vector2(1.57895, 0.55)
 texture = SubResource("Atlas_ground")
 
-[node name="Decor" type="Node2D" parent="."]
-z_index = -3
-
-[node name="LampLeft" type="Sprite2D" parent="Decor"]
-position = Vector2(-1270, 355.75)
-scale = Vector2(0.45, 0.45)
-texture = SubResource("Atlas_lamp")
-
-[node name="LampRight" type="Sprite2D" parent="Decor"]
-position = Vector2(1270, 355.75)
-scale = Vector2(0.45, 0.45)
-texture = SubResource("Atlas_lamp")
-flip_h = true
-
-[node name="StopSign" type="Sprite2D" parent="Decor"]
-position = Vector2(-1110, 396.2)
-scale = Vector2(0.65, 0.65)
-texture = SubResource("Atlas_stop")
-
-[node name="TrafficLight" type="Sprite2D" parent="Decor"]
-position = Vector2(1110, 381.05)
-scale = Vector2(0.55, 0.55)
-texture = SubResource("Atlas_traffic")
-
-[node name="DeadTree" type="Sprite2D" parent="Decor"]
-position = Vector2(1180, 374)
-scale = Vector2(0.7, 0.7)
-texture = SubResource("Atlas_tree")
-
-[node name="LeftBoundaryVisual" type="Polygon2D" parent="."]
-z_index = -1
-polygon = PackedVector2Array(-1428, -80, -1392, -80, -1392, 430, -1428, 430)
+[node name="LeftBoundaryVisual" type="Polygon2D" parent="." unique_id=133083633]
+light_mask = 30
+visibility_layer = 30
+z_index = 1
+position = Vector2(-649.88, 0)
 color = Color(0.18, 0.16, 0.16, 1)
+polygon = PackedVector2Array(-1428, -80, -1392, -80, -1392, 430, -1428, 430, -1428.0001, 162)
 
-[node name="RightBoundaryVisual" type="Polygon2D" parent="."]
-z_index = -1
+[node name="RightBoundaryVisual" type="Polygon2D" parent="." unique_id=1237985378]
+light_mask = 30
+visibility_layer = 30
+z_index = 1
+color = Color(0.18, 0.16, 0.16, 1)
 polygon = PackedVector2Array(1392, -80, 1428, -80, 1428, 430, 1392, 430)
-color = Color(0.18, 0.16, 0.16, 1)
 
-[node name="Ground" type="StaticBody2D" parent="."]
+[node name="Ground" type="StaticBody2D" parent="." unique_id=1263963495]
+light_mask = 30
+visibility_layer = 30
+z_index = 1
 position = Vector2(0, 460)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground" unique_id=2022177868]
+light_mask = 30
+visibility_layer = 30
+z_index = 1
+position = Vector2(-323.5, 0)
 shape = SubResource("Shape_ground")
 
-[node name="LeftWall" type="StaticBody2D" parent="."]
+[node name="LeftWall" type="StaticBody2D" parent="." unique_id=1372884444]
+light_mask = 30
+visibility_layer = 30
+z_index = 1
 position = Vector2(-1410, 170)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="LeftWall"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LeftWall" unique_id=598131889]
+light_mask = 30
+visibility_layer = 30
+z_index = 1
+position = Vector2(-646, -295)
 shape = SubResource("Shape_wall")
 
-[node name="RightWall" type="StaticBody2D" parent="."]
+[node name="RightWall" type="StaticBody2D" parent="." unique_id=4654547]
+light_mask = 30
+visibility_layer = 30
+z_index = 1
 position = Vector2(1410, 170)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="RightWall"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RightWall" unique_id=1133999325]
+light_mask = 30
+visibility_layer = 30
+z_index = 1
+position = Vector2(3, -220)
 shape = SubResource("Shape_wall")
 
-[node name="OuterLeft" type="StaticBody2D" parent="."]
+[node name="OuterLeft" type="StaticBody2D" parent="." unique_id=1306718526]
+light_mask = 30
+visibility_layer = 30
+z_index = 1
 position = Vector2(-850, 367)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="OuterLeft"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="OuterLeft" unique_id=1544145611]
+light_mask = 30
+visibility_layer = 30
+z_index = 1
 shape = SubResource("Shape_platform_300")
 one_way_collision = true
 one_way_collision_margin = 8.0
 
-[node name="InnerLeft" type="StaticBody2D" parent="."]
+[node name="InnerLeft" type="StaticBody2D" parent="." unique_id=320953396]
+light_mask = 30
+visibility_layer = 30
+z_index = 1
 position = Vector2(-450, 342)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="InnerLeft"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InnerLeft" unique_id=1900741431]
+light_mask = 30
+visibility_layer = 30
+z_index = 1
+position = Vector2(-48.5, 0)
 shape = SubResource("Shape_platform_260")
 one_way_collision = true
 one_way_collision_margin = 8.0
 
-[node name="Center" type="StaticBody2D" parent="."]
+[node name="Center" type="StaticBody2D" parent="." unique_id=865369319]
+light_mask = 30
+visibility_layer = 30
+z_index = 1
 position = Vector2(0, 367)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Center"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Center" unique_id=1323518612]
+light_mask = 30
+visibility_layer = 30
+z_index = 1
 shape = SubResource("Shape_platform_320")
 one_way_collision = true
 one_way_collision_margin = 8.0
 
-[node name="InnerRight" type="StaticBody2D" parent="."]
+[node name="InnerRight" type="StaticBody2D" parent="." unique_id=57435492]
+light_mask = 30
+visibility_layer = 30
+z_index = 1
 position = Vector2(450, 342)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="InnerRight"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InnerRight" unique_id=387265138]
+light_mask = 30
+visibility_layer = 30
+z_index = 1
+position = Vector2(0, 1)
 shape = SubResource("Shape_platform_260")
 one_way_collision = true
 one_way_collision_margin = 8.0
 
-[node name="OuterRight" type="StaticBody2D" parent="."]
+[node name="OuterRight" type="StaticBody2D" parent="." unique_id=1027833662]
+light_mask = 30
+visibility_layer = 30
+z_index = 1
 position = Vector2(850, 367)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="OuterRight"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="OuterRight" unique_id=718841968]
+light_mask = 30
+visibility_layer = 30
+z_index = 1
 shape = SubResource("Shape_platform_300")
 one_way_collision = true
 one_way_collision_margin = 8.0
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1243004913]
+light_mask = 30
+visibility_layer = 30
+z_index = 1
+texture = SubResource("ImageTexture_xh7jx")
+
+[node name="Images" type="Sprite2D" parent="." unique_id=1530088991]
+show_behind_parent = true
+oversampling_with_scale = 1
+light_mask = 0
+position = Vector2(-331, -318)
+scale = Vector2(4.6368246, 3.8740716)
+texture = ExtResource("2_rtlo6")

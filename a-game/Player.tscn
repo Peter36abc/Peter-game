@@ -296,17 +296,22 @@ radius = 9.0
 height = 34.0
 
 [node name="CharacterBody2D" type="CharacterBody2D" unique_id=1082126970]
+z_index = 2
 script = ExtResource("1_dtqjt")
+aim_smoothing = 26.17
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1867478819]
+z_index = 2
 sprite_frames = SubResource("SpriteFrames_ay8wc")
 animation = &"Idle"
 autoplay = "Idle"
 frame_progress = 0.4901986
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=422313634]
+z_index = 2
 position = Vector2(-1, 6)
 shape = SubResource("CapsuleShape2D_ay8wc")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1853397227]
+z_index = 2
 zoom = Vector2(1.39, 1.39)

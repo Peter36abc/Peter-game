@@ -190,3 +190,16 @@ theme_override_colors/font_color = Color(1, 0.35, 0.32, 1)
 theme_override_font_sizes/font_size = 22
 text = "HP 17 / 17"
 horizontal_alignment = 1
+
+[node name="Ammo2" type="Label" parent="TextureRect" unique_id=326788839]
+layout_mode = 0
+offset_left = 885.99994
+offset_top = 15.0
+offset_right = 1217.0
+offset_bottom = 126.0
+scale = Vector2(0.755, 0.755)
+theme_override_font_sizes/font_size = 39
+text = "A,S,W,D TO MOVE
+R TO RELOAD"
+horizontal_alignment = 1
+max_lines_visible = 508

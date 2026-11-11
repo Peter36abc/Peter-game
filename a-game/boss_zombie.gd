@@ -13,7 +13,7 @@ enum SlamState {
 @export var slam_cooldown: float = 4.5
 @export var slam_telegraph_duration: float = 0.95
 @export var slam_recovery_duration: float = 0.5
-@export var lightning_count: int = 5
+@export var lightning_count: int = 3
 @export var lightning_spacing: float = 145.0
 @export var lightning_strike_interval: float = 0.09
 @export var lightning_hit_radius: float = 82.0

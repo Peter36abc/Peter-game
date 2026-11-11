@@ -53,4 +53,4 @@ script = ExtResource("2_lightning")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2053285857]
 position = Vector2(0, -128)
 sprite_frames = SubResource("SpriteFrames_ay8wc")
-frame_progress = 0.4088076
+frame_progress = 0.120852865

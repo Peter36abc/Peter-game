@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://ds53jgbfidsdp"]
 
 [ext_resource type="Texture2D" uid="uid://db2fn1oxln26p" path="res://ecc9553b-9a94-49af-a251-1cee3043ecd2.png" id="1_n8un1"]
-[ext_resource type="Script" path="res://barrel.gd" id="2_barrel"]
+[ext_resource type="Script" uid="uid://b58j3mbkyd2d6" path="res://barrel.gd" id="2_barrel"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_a12vh"]
 atlas = ExtResource("1_n8un1")
@@ -27,5 +27,5 @@ script = ExtResource("2_barrel")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1846444787]
 sprite_frames = SubResource("SpriteFrames_ay8wc")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1195062108]
 shape = SubResource("RectangleShape_barrel")

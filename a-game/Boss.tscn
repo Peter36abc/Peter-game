@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://drb62xxcyfhcp"]
 
 [ext_resource type="Texture2D" uid="uid://d3suwbjfqsku" path="res://70607b1c-3b7f-4672-adc1-02db75ba6007.png" id="1_dtosr"]
-[ext_resource type="Script" path="res://boss_zombie.gd" id="2_boss"]
+[ext_resource type="Script" uid="uid://b6jtn3oc22vdi" path="res://boss_zombie.gd" id="2_boss"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_j13hd"]
 atlas = ExtResource("1_dtosr")
@@ -235,7 +235,7 @@ animations = [{
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_cipi3"]
 radius = 74.0
-height = 174.0
+height = 187.09676
 
 [node name="BossZombie" type="CharacterBody2D" unique_id=1305357785]
 scale = Vector2(0.62, 0.62)

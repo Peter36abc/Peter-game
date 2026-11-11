@@ -120,7 +120,6 @@ var knockback_timer: float = 0.0
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 
-
 # ============================================================
 # READY
 # ============================================================
@@ -471,6 +470,11 @@ func take_damage(
 		die()
 		return
 
+	var hit_sfx = AudioStreamPlayer2D.new()
+	hit_sfx.stream = preload("res://Assets/GunHit.mp3")
+	add_child(hit_sfx)
+	hit_sfx.play()
+
 
 	if hit_stun_enabled:
 		start_hurt_animation()
@@ -565,7 +569,10 @@ func die() -> void:
 			"disabled",
 			true
 		)
-
+	var hit_sfx = AudioStreamPlayer2D.new()
+	hit_sfx.stream = preload("res://Assets/freesound_community-zombie-pain-1-95166.mp3")
+	add_child(hit_sfx)
+	hit_sfx.play()
 
 	if animated_sprite.sprite_frames.has_animation(anim_die):
 

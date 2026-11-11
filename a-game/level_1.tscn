@@ -6,9 +6,8 @@
 [ext_resource type="PackedScene" uid="uid://db3w8di6oqp8p" path="res://PauseMenu.tscn" id="5_pause"]
 [ext_resource type="PackedScene" uid="uid://d4mcc7y2qkayu" path="res://UpgradeMenu.tscn" id="6_upgrade"]
 [ext_resource type="PackedScene" path="res://DeathMenu.tscn" id="7_death"]
-[ext_resource type="PackedScene" uid="uid://ds53jgbfidsdp" path="res://barrel.tscn" id="8_bjebc"]
-[ext_resource type="PackedScene" path="res://ArenaMap.tscn" id="9_5rr72"]
-[ext_resource type="Script" path="res://arena_map.gd" id="9_gyffv"]
+[ext_resource type="PackedScene" uid="uid://cwn3g6kww6igh" path="res://ArenaMap.tscn" id="9_5rr72"]
+[ext_resource type="Script" uid="uid://b6cj7ymklpcj8" path="res://arena_map.gd" id="9_gyffv"]
 
 [node name="Level1" type="Node2D" unique_id=545096724]
 
@@ -33,22 +32,6 @@ grow_vertical = 1
 [node name="ZombieSpawner" type="Node2D" parent="." unique_id=1058509778]
 script = ExtResource("4_rka8t")
 
-[node name="Barrel" parent="." unique_id=1691544089 instance=ExtResource("8_bjebc")]
-position = Vector2(-900, 420.13)
-scale = Vector2(0.63, 0.63)
-
-[node name="Barrel2" parent="." unique_id=533218554 instance=ExtResource("8_bjebc")]
-position = Vector2(-740, 420.13)
-scale = Vector2(0.63, 0.63)
-
-[node name="Barrel3" parent="." unique_id=1237893793 instance=ExtResource("8_bjebc")]
-position = Vector2(420, 420.13)
-scale = Vector2(0.63, 0.63)
-
-[node name="Barrel4" parent="." unique_id=2104824569 instance=ExtResource("8_bjebc")]
-position = Vector2(980, 420.13)
-scale = Vector2(0.63, 0.63)
-
 [node name="ArenaMap" parent="." unique_id=959456350 instance=ExtResource("9_5rr72")]
+position = Vector2(175, 27)
 script = ExtResource("9_gyffv")
-legacy_tile_map_path = NodePath("")

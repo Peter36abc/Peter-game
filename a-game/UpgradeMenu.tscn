@@ -76,13 +76,12 @@ horizontal_alignment = 1
 
 [node name="LevelLabel" type="Label" parent="Content" unique_id=1582676606]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.2, 0.9, 0.7, 1)
+theme_override_colors/font_color = Color(0.5692482, 0.805259, 1, 1)
 theme_override_font_sizes/font_size = 20
 text = "LEVEL 5"
 horizontal_alignment = 1
 
 [node name="Cards" type="HBoxContainer" parent="Content" unique_id=1932672746]
-custom_minimum_size = Vector2(0, 285)
 layout_mode = 2
 theme_override_constants/separation = 18
 alignment = 1
@@ -90,6 +89,7 @@ alignment = 1
 [node name="Card1" type="Button" parent="Content/Cards" unique_id=214304349]
 custom_minimum_size = Vector2(300, 250)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.6315512, 0.9311812, 1, 1)
 theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("CardNormal")
 theme_override_styles/pressed = SubResource("CardPressed")
@@ -101,6 +101,7 @@ autowrap_mode = 2
 [node name="Card2" type="Button" parent="Content/Cards" unique_id=1772260278]
 custom_minimum_size = Vector2(300, 250)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.6315512, 0.9311812, 1, 1)
 theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("CardNormal")
 theme_override_styles/pressed = SubResource("CardPressed")
@@ -112,6 +113,7 @@ autowrap_mode = 2
 [node name="Card3" type="Button" parent="Content/Cards" unique_id=1041092653]
 custom_minimum_size = Vector2(300, 250)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.6315512, 0.9311812, 1, 1)
 theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("CardNormal")
 theme_override_styles/pressed = SubResource("CardPressed")

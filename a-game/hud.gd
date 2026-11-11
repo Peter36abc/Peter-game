@@ -110,7 +110,6 @@ func ensure_heart_count(maximum_lives: int) -> void:
 		hearts.append(new_heart)
 		register_animated_control(new_heart)
 
-
 # ============================================================
 # WAVE
 # ============================================================
@@ -159,9 +158,8 @@ func set_experience(level: int, amount: int, required: int) -> void:
 	experience_bar.value = clampi(amount, 0, required)
 
 	if animations_ready and level != previous_level:
-		pulse_control(level_label, Color(0.2, 0.95, 0.75, 1.0), 1.15)
+		pulse_control(level_label, Color(1.0, 0.743, 0.744, 1.0), 1.15)
 	previous_level = level
-
 
 func set_shield(amount: int) -> void:
 	shield_label.text = "SHIELD " + str(maxi(amount, 0))
@@ -239,7 +237,7 @@ func animate_heart_lost(heart: Control) -> void:
 	tween.parallel().tween_property(
 		heart,
 		"modulate",
-		Color(1.0, 0.15, 0.12, 1.0),
+		Color(1.0, 0.15, 0.12, 1.0), 
 		0.08
 	)
 	tween.tween_property(heart, "scale", base_scale * 0.3, 0.16)

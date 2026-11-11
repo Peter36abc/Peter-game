@@ -20,7 +20,6 @@ func take_damage(
 ) -> void:
 	explode()
 
-
 func explode() -> void:
 	if has_exploded:
 		return
@@ -45,7 +44,7 @@ func spawn_explosion_effect() -> void:
 		effect_2d.scale = Vector2.ONE * explosion_visual_scale
 
 
-func apply_blast() -> void:
+func apply_blast() -> void: 
 	var targets: Array[Node] = []
 	targets.append_array(get_tree().get_nodes_in_group("players"))
 	targets.append_array(get_tree().get_nodes_in_group("zombies"))

@@ -87,22 +87,22 @@ const DustParticles = preload("res://dust_particles.gd")
 
 @export_group("Gun")
 
-@export var mag_size: int = 12
-@export var starting_reserve_ammo: int = 150
+@export var mag_size: int = 35
+@export var starting_reserve_ammo: int = 1000
 
 @export var reload_time: float = 1.5
 @export var fire_rate: float = 0.15
 
 @export var shoot_distance: float = 850.0
 @export var damage: int = 20
-@export var max_reserve_ammo: int = 300
+@export var max_reserve_ammo: int = 1000
 
 
 @export_group("Upgrades")
 
 @export var starting_experience_to_level: int = 5
 @export var extra_experience_per_level: int = 2
-@export var levels_per_upgrade: int = 2
+@export var levels_per_upgrade: int = 1
 @export var multishot_spread_degrees: float = 8.0
 
 
@@ -738,7 +738,10 @@ func shoot() -> void:
 
 	ammo -= 1
 
-
+	var gun_fire = AudioStreamPlayer2D.new()
+	gun_fire.stream = preload("res://Assets/GunFire.mp3")
+	add_child(gun_fire)
+	gun_fire.play()
 	# --------------------------------------------------------
 	# FIRE RATE
 	# --------------------------------------------------------
@@ -787,14 +790,7 @@ func shoot() -> void:
 		)
 
 
-	print(
-		"Ammo: ",
-		ammo,
-		"/",
-		mag_size,
-		" | Reserve: ",
-		reserve_ammo
-	)
+	
 
 	update_hud_ammo()
 
@@ -817,6 +813,10 @@ func fire_hitscan(start_position: Vector2, direction: Vector2) -> Vector2:
 
 	var impact_position: Vector2 = result["position"]
 	return impact_position
+	var gun_hit = AudioStreamPlayer2D.new()
+	gun_hit.stream = preload("res://Assets/GunHit.mp3")
+	add_child(gun_hit)
+	gun_hit.play()
 
 
 # ============================================================
@@ -941,7 +941,6 @@ func spawn_muzzle_flash(
 	var flash := Polygon2D.new()
 
 
-	# Diamond / flame-like flash
 	flash.polygon = PackedVector2Array([
 
 		Vector2(
@@ -1022,6 +1021,7 @@ func spawn_muzzle_flash(
 		0.0,
 		muzzle_flash_time
 	)
+	
 
 
 	tween.tween_callback(
@@ -1076,9 +1076,6 @@ func start_reload() -> void:
 	update_animation()
 
 
-	print("Reloading...")
-
-
 # ============================================================
 # HANDLE RELOAD
 # ============================================================
@@ -1127,15 +1124,6 @@ func finish_reload() -> void:
 
 	update_animation()
 
-
-	print(
-		"Reloaded! Ammo: ",
-		ammo,
-		"/",
-		mag_size,
-		" | Reserve: ",
-		reserve_ammo
-	)
 
 	update_hud_ammo()
 
@@ -1209,14 +1197,11 @@ func take_damage(
 		0
 	)
 
-	print(
-		"Player hit! Lives: ",
-		current_lives,
-		"/",
-		max_lives,
-		" | Incoming damage value: ",
-		amount
-	)
+	var hit_sfx = AudioStreamPlayer2D.new()
+	hit_sfx.stream = preload("res://Assets/cookiecheese-hurt-sound-531758.mp3")
+	add_child(hit_sfx)
+	hit_sfx.play()
+	
 
 	start_camera_shake()
 	update_hud_lives()
@@ -1226,6 +1211,11 @@ func take_damage(
 		return
 
 	start_hurt_animation()
+	for i in range(5): # Nhấp nháy 5 lần
+		self.modulate.a = 0.2  # Làm mờ nhân vật (hoặc đổi màu đỏ/trắng)
+		await get_tree().create_timer(0.1).timeout
+		self.modulate.a = 1.0  # Hiện lại bình thường
+		await get_tree().create_timer(0.1).timeout
 
 
 func start_hurt_animation() -> void:
@@ -1464,19 +1454,6 @@ func regenerate_after_wave() -> void:
 
 	update_hud_lives()
 	update_hud_ammo()
-
-	print(
-		"WAVE REGEN -> Lives: ",
-		current_lives,
-		"/",
-		max_lives,
-		" | Ammo: ",
-		ammo,
-		"/",
-		mag_size,
-		" | Reserve: ",
-		reserve_ammo
-	)
 
 
 func die() -> void:
